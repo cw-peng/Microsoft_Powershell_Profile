@@ -42,8 +42,13 @@ $script:PSFzfLoaded = $false
 
 function global:Ensure-PSFzf {
     if (-not $script:PSFzfLoaded) {
+        $env:_PSFZF_FZF_DEFAULT_OPTS="--height=100% --layout=reverse --border --popup "
+        # $env:FZF_DEFAULT_OPTS="--height=100% --layout=reverse --border --popup "
+        $env:FZF_CTRL_T_OPTS = "--preview 'pwsh -NoProfile -File $HOME\.config\fzf\preview.ps1 {} ' --preview-window wrap"
+        $env:FZF_ALT_C_OPTS = "--preview 'eza --tree --color=always {}' --preview-window wrap"
         Import-Module PSFzf
-        Set-PsFzfOption -PSReadlineChordReverseHistory Ctrl+r
+        # replace 'Ctrl+t' and 'Ctrl+r' with your preferred bindings:
+        Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
         $script:PSFzfLoaded = $true
     }
 }
@@ -108,7 +113,7 @@ function touch {
 # Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
 # -------------- starship config ----------------
-$ENV:STARSHIP_CONFIG = "C:\Users\cwp\.config\starship.toml"
+$ENV:STARSHIP_CONFIG = "$HOME\.config\starship.toml"
 function Invoke-Starship-TransientFunction {
   &starship module character
 }
@@ -116,29 +121,3 @@ Invoke-Expression (&starship init powershell)
 
 Enable-TransientPrompt
 
-# # -----------------------------------------------
-# #region vscode python
-# #version: 0.1.1
-
-# if (-not $env:VSCODE_PYTHON_AUTOACTIVATE_GUARD) {
-
-#     $env:VSCODE_PYTHON_AUTOACTIVATE_GUARD = '1'
-
-#     if (($env:TERM_PROGRAM -eq 'vscode') -and ($null -ne $env:VSCODE_PYTHON_PWSH_ACTIVATE)) {
-
-#         try {
-
-#             Invoke-Expression $env:VSCODE_PYTHON_PWSH_ACTIVATE
-
-#         } catch {
-
-#             $psVersion = $PSVersionTable.PSVersion.Major
-
-#             Write-Error "Failed to activate Python environment (PowerShell $psVersion): $_" -ErrorAction Continue
-
-#         }
-
-#     }
-
-# }
-# #endregion vscode python
