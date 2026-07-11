@@ -42,13 +42,14 @@ $script:PSFzfLoaded = $false
 
 function global:Ensure-PSFzf {
     if (-not $script:PSFzfLoaded) {
-        $env:_PSFZF_FZF_DEFAULT_OPTS="--height=100% --layout=reverse --border --popup "
-        # $env:FZF_DEFAULT_OPTS="--height=100% --layout=reverse --border --popup "
+        # $env:_PSFZF_FZF_DEFAULT_OPTS can't toogle preview when press Ctrl+t
+        # $env:_PSFZF_FZF_DEFAULT_OPTS="--height=100% --layout=reverse --border --popup " 
+        $env:FZF_DEFAULT_OPTS="--height=100% --layout=reverse --border --popup "
         $env:FZF_CTRL_T_OPTS = "--preview 'pwsh -NoProfile -File $HOME\.config\fzf\preview.ps1 {} ' --preview-window wrap"
         $env:FZF_ALT_C_OPTS = "--preview 'eza --tree --color=always {}' --preview-window wrap"
         Import-Module PSFzf
         # replace 'Ctrl+t' and 'Ctrl+r' with your preferred bindings:
-        Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
+        Set-PsFzfOption -PSReadlineChordReverseHistory 'Ctrl+r'
         $script:PSFzfLoaded = $true
     }
 }
