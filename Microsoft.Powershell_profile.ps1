@@ -1,3 +1,11 @@
+# UTF-8 Console
+$utf8 = [System.Text.UTF8Encoding]::new($false)
+
+[Console]::InputEncoding = $utf8
+[Console]::OutputEncoding = $utf8
+
+$OutputEncoding = $utf8
+
 # --------------Terminal-Icons------------
 $script:TerminalIconsLoaded = $false
 
@@ -25,10 +33,10 @@ function global:Ensure-PSReadLine {
         -HistorySearchCursorMovesToEnd `
         -MaximumHistoryCount 500
 
-        # 设置 Tab 为菜单补全和 Intellisense
+        # set Tab menu completion and Intellisense
         Set-PSReadLineKeyHandler -Key "Tab" -Function MenuComplete 
         
-        # 设置 Ctrl+d 为退出 PowerShell
+        # set Ctrl+d exit PowerShell
         Set-PSReadlineKeyHandler -Key "Ctrl+d" -Function ViExit
     }
 }
@@ -47,6 +55,8 @@ function global:Ensure-PSFzf {
         $env:FZF_DEFAULT_OPTS="--height=100% --layout=reverse --border --popup "
         $env:FZF_CTRL_T_OPTS = "--preview 'pwsh -NoProfile -File $HOME\.config\fzf\preview.ps1 {} ' --preview-window wrap"
         $env:FZF_ALT_C_OPTS = "--preview 'eza --tree --color=always {}' --preview-window wrap"
+        $env:FZF_CTRL_T_COMMAND = "fd --hidden --exclude .git "
+        $env:FZF_ALT_C_COMMAND = "fd --type d"
         Import-Module PSFzf
         # replace 'Ctrl+t' and 'Ctrl+r' with your preferred bindings:
         Set-PsFzfOption -PSReadlineChordReverseHistory 'Ctrl+r'
