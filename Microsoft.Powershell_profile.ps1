@@ -96,9 +96,6 @@ function global:Ensure-Zoxide {
     if (-not $script:ZoxideLoaded) {
         Invoke-Expression (& { (zoxide init powershell | Out-String) })
         $env:_ZO_MAXAGE=1000
-        Set-Alias za "zoxide add"
-        Set-Alias zq "zoxide query"
-        Set-Alias zr "zoxide remove"
         $script:ZoxideLoaded = $true
 
     }
@@ -127,6 +124,9 @@ Register-EngineEvent PowerShell.OnIdle `
 # -----------------------------------------
 
 # --------------alias----------------------
+function za { zoxide add @args }
+function zq { zoxide query @args }
+function zr { zoxide remove @args }
 # 使用 ll 查看目录
 function ll {
     Get-ChildItem
