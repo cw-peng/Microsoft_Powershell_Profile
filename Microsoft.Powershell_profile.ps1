@@ -32,6 +32,7 @@ function global:Ensure-PSReadLine {
         -PredictionViewStyle InlineView `
         -HistorySearchCursorMovesToEnd `
         -MaximumHistoryCount 500
+        
         Set-PSReadLineOption -Colors @{
         Command            = "`e[93m"
         Comment            = "`e[32m"
@@ -70,9 +71,8 @@ $script:PSFzfLoaded = $false
 
 function global:Ensure-PSFzf {
     if (-not $script:PSFzfLoaded) {
-        # $env:_PSFZF_FZF_DEFAULT_OPTS can't toogle preview when press Ctrl+t
-        # $env:_PSFZF_FZF_DEFAULT_OPTS="--height=100% --layout=reverse --border --popup " 
-        $env:FZF_DEFAULT_OPTS="--height=100% --layout=reverse --border --popup "
+        $env:_PSFZF_FZF_DEFAULT_OPTS="--height=100% --layout=reverse --border --popup " 
+        # $env:FZF_DEFAULT_OPTS="--height=100% --layout=reverse --border --popup "
         $env:FZF_CTRL_T_OPTS = "--preview 'pwsh -NoProfile -File $HOME\.config\fzf\preview.ps1 {} ' --preview-window wrap"
         $env:FZF_ALT_C_OPTS = "--preview 'eza --tree --color=always {}' --preview-window wrap"
         $env:FZF_CTRL_T_COMMAND = "fd --hidden --exclude .git "
@@ -95,7 +95,12 @@ $script:ZoxideLoaded = $false
 function global:Ensure-Zoxide {
     if (-not $script:ZoxideLoaded) {
         Invoke-Expression (& { (zoxide init powershell | Out-String) })
+        $env:_ZO_MAXAGE=1000
+        Set-Alias za "zoxide add"
+        Set-Alias zq "zoxide query"
+        Set-Alias zr "zoxide remove"
         $script:ZoxideLoaded = $true
+
     }
 }
 
@@ -106,10 +111,10 @@ function global:Ensure-Zoxide {
 
 # ----------Register----------------------
 $global:IdleTasks = @(
-    {Ensure-TerminalIcons} 
+    {Ensure-PSReadLine}
     {Ensure-PSFzf} 
-    {Ensure-PSReadLine} 
     {Ensure-Zoxide}
+    {Ensure-TerminalIcons} 
 )
 
 Register-EngineEvent PowerShell.OnIdle `
