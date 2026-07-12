@@ -32,7 +32,27 @@ function global:Ensure-PSReadLine {
         -PredictionViewStyle InlineView `
         -HistorySearchCursorMovesToEnd `
         -MaximumHistoryCount 500
-
+        Set-PSReadLineOption -Colors @{
+        Command            = "`e[93m"
+        Comment            = "`e[32m"
+        ContinuationPrompt = "`e[37m"
+        Default            = "`e[37m"
+        Emphasis           = "`e[96m"
+        Error              = "`e[91m"
+        InlinePrediction   = "`e[97;2;3m"
+        Keyword            = "`e[92m"
+        ListPrediction     = "`e[33m"
+        ListPredictionSelected = "`e[48;5;238m"
+        ListPredictionTooltip  = "`e[97;2;3m"
+        Member             = "`e[37m"
+        Number             = "`e[97m"
+        Operator           = "`e[34m"
+        Parameter          = "`e[37;2m"
+        Selection          = "`e[30;47m"
+        String             = "`e[36m"
+        Type               = "`e[37m"
+        Variable           = "`e[92m"
+        }
         # set Tab menu completion and Intellisense
         Set-PSReadLineKeyHandler -Key "Tab" -Function MenuComplete 
         
@@ -121,7 +141,7 @@ function touch {
 # ----------------------------------------------
 
 # zoxide
-# Invoke-Expression (& { (zoxide init powershell | Out-String) })
+Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
 # -------------- starship config ----------------
 $ENV:STARSHIP_CONFIG = "$HOME\.config\starship.toml"
