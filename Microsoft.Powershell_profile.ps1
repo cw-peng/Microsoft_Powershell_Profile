@@ -129,18 +129,27 @@ function zq { zoxide query @args }
 function zr { zoxide remove @args }
 # 使用 ll 查看目录
 function ll {
-    Get-ChildItem
+    Get-ChildItem @args
 }
 
 # touch alias
 function touch {
-    param([string]$Path)
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory, ValueFromRemainingArguments)]
+        [string[]]$Path
+    )
 
-    try {
-        (Get-Item -LiteralPath $Path).LastWriteTime = Get-Date
-    }
-    catch {
-        New-Item -ItemType File -Path $Path | Out-Null
+    foreach ($p in $Path) {
+        if (Test-Path -LiteralPath $p -PathType Leaf) {
+            (Get-Item -LiteralPath $p).LastWriteTime = [DateTime]::Now
+        }
+        elseif (Test-Path -LiteralPath $p) {
+            Write-Warning "'$p' is a directory"
+        }
+        else {
+            New-Item -ItemType File -Path $p | Out-Null
+        }
     }
 }
 # ----------------------------------------------
