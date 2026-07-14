@@ -75,7 +75,7 @@ function global:Ensure-PSFzf {
         # $env:FZF_DEFAULT_OPTS="--height=100% --layout=reverse --border --popup "
         $env:FZF_CTRL_T_OPTS = "--preview 'pwsh -NoProfile -File $HOME\.config\fzf\preview.ps1 {} ' --preview-window wrap"
         $env:FZF_ALT_C_OPTS = "--preview 'eza --tree --color=always {}' --preview-window wrap"
-        $env:FZF_CTRL_T_COMMAND = "fd --hidden --exclude .git "
+        $env:FZF_CTRL_T_COMMAND = "fd --hidden --exclude .git --exclude node_modules --exclude .venv --exclude '*.ini'"
         $env:FZF_ALT_C_COMMAND = "fd --type d"
         Import-Module PSFzf
         # replace 'Ctrl+t' and 'Ctrl+r' with your preferred bindings:
